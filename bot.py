@@ -10,21 +10,22 @@ keep_alive()
 
 TOKEN = os.environ["DISCORD_TOKEN"]
 
-# --- 修改這部分 ---
+# 完整權限設定
 intents = discord.Intents.default()
-intents.message_content = True  # 讓機器人能讀取訊息內容，消除日誌警告
-# -----------------
+intents.message_content = True 
+intents.presences = True  # 讓機器人顯示綠燈狀態
+intents.members = True    # 讀取成員權限
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
 async def on_ready():
-    # 同步斜線指令（Slash Commands）
+    # 同步斜線指令
     try:
         synced = await bot.tree.sync()
         print(f"✅ 已同步 {len(synced)} 個指令")
     except Exception as e:
-        print(f"❌ 同步指令失敗: {e}")
+        print(f"同步指令失敗: {e}")
     
     print(f"Logged in as {bot.user}")
 
@@ -38,7 +39,7 @@ async def translate(
     文字: str, 
     目標語言: str = "zh-TW"
 ):
-    # 先發送「處理中」的回應，避免翻譯太久導致互動逾時 (3秒限制)
+    # 避免翻譯時間超過 3 秒導致逾時
     await interaction.response.defer(ephemeral=False) 
 
     try:
@@ -48,14 +49,14 @@ async def translate(
         ).translate(文字)
 
         await interaction.followup.send(
-            f"🌐 **翻譯結果** ({目標語言})\n\n"
+            f"**翻譯結果** ({目標語言})\n\n"
             f"**原文：** {文字}\n"
             f"**翻譯：** {result}"
         )
 
     except Exception as e:
         await interaction.followup.send(
-            f"❌ 翻譯失敗：{e}", 
+            f"翻譯失敗：{e}", 
             ephemeral=True
         )
 
