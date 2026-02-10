@@ -3,6 +3,10 @@ from discord.ext import commands
 from discord import app_commands
 from deep_translator import GoogleTranslator
 import os
+from server import keep_alive   # ⭐ 新增
+
+# 啟動保活 Web Server
+keep_alive()                    # ⭐ 新增
 
 TOKEN = os.environ["DISCORD_TOKEN"]
 
