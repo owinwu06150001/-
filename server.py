@@ -1,18 +1,18 @@
-import os
 from flask import Flask
 from threading import Thread
+import os
 
-app = Flask("keep_alive")
+app = Flask('')
 
-@app.route("/")
+@app.route('/')
 def home():
-    return "Bot is alive!"
+    return "I am alive!"
 
 def run():
-    # 優先使用 Render 提供的 PORT 環境變數
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port)
+    # Render 會給予一個 PORT 環境變數，一定要讀取它
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
 
 def keep_alive():
-    t = Thread(target=run) # 使用執行緒避免阻斷主程式
+    t = Thread(target=run)
     t.start()
